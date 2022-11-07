@@ -1,4 +1,5 @@
 import nltk
+
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from flask import Flask, request, jsonify
@@ -13,7 +14,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = Flask(__name__)
 CORS(app)
-
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'zip'}
 
 
@@ -28,7 +28,8 @@ def get_file_info(file, filename):
 
     if extention == 'zip':
         # unzip logic goes here
-        with ZipFile('resume/' + filename, 'r') as zip_:
+        filepath = os.path.dirname(__file__) + '' + os.path.join("resume", filename).replace("\\", "/")
+        with ZipFile(filepath, 'r') as zip_:
             # printing all the contents of the zip file
             zip_.printdir()
             file_names = zip_.namelist()
@@ -46,7 +47,8 @@ def get_file_info(file, filename):
                 male = 'male'
                 gender.append(male)
                 if j.endswith('.pdf') or j.endswith('.docx'):
-                    data = ResumeParser('resume/' + j).get_extracted_data()
+                    filepath = os.path.dirname(__file__) + '' + os.path.join("resume", j).replace("\\", "/")
+                    data = ResumeParser(filepath).get_extracted_data()
                     print(data)
                     dict_ = {}
                     selected_dict = {}
@@ -129,24 +131,22 @@ def get_file_info(file, filename):
 
     if extention == 'pdf':
         # read pdf
-        data = ResumeParser('resume/' + filename).get_extracted_data()
+        filepath = os.path.dirname(__file__) + '' + os.path.join("resume", filename).replace("\\", "/")
+        data = ResumeParser(filepath).get_extracted_data()
         custom_ner(data)
         ac_dict, re_dict = custom_ner(data)
         return ac_dict, re_dict
 
     if extention == 'docx':
         # read docx
-        data = ResumeParser('resume/' + filename).get_extracted_data()
-        custom_ner(data)
+        filepath = os.path.dirname(__file__) + '' + os.path.join("resume", filename).replace("\\", "/")
+        print("fp:", filepath)
+        data = ResumeParser(filepath).get_extracted_data()
+        # data = ResumeParser('resume/' + filename).get_extracted_data()
+        # custom_ner(data)
         ac_dict, re_dict = custom_ner(data)
         return ac_dict, re_dict
     return ac_dict, re_dict
-
-
-@app.route('/', methods=['GET'])
-@cross_origin()
-def hello():
-    return jsonify({'App Runnning successfully'})
 
 
 @app.route('/parse_table', methods=['POST'])
@@ -366,8 +366,9 @@ def custom_ner(data):
 
             cosine_df = pd.concat([cosColumn_df, cos__df], axis=0, ignore_index=True)
 
-            cosine_df = cosine_df[['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Status', 'Similarity',
-                                   'Remark']]
+            cosine_df = cosine_df[
+                ['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Status', 'Similarity',
+                 'Remark']]
 
             cosine_df.index = cosine_df.index + 1
             cosine_df['index'] = cosine_df['index'].astype(int)
@@ -485,8 +486,9 @@ def custom_ner(data):
 
             cosine_df['index'] = cosine_df['index'].astype(int)
 
-            cosine_df = cosine_df[['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Status', 'Similarity',
-                                   'Remark']]
+            cosine_df = cosine_df[
+                ['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Status', 'Similarity',
+                 'Remark']]
 
             cosine_df.index = cosine_df.index + 1
 
@@ -626,7 +628,8 @@ def customZip_ner(candis_df, name, email, phone, mk, gender):
                 remark = "Total Experience is not meeting the JD's Requirements"
                 remarks.append(remark)
 
-        cos_df = pd.DataFrame(columns=['index', 'Name', 'Gender', 'Similarity', 'Status', 'Remark', 'Email id', 'Phone No'])
+        cos_df = pd.DataFrame(columns=['index', 'Name', 'Gender', 'Similarity', 'Status', 'Remark', 'Email id',
+                                       'Phone No'])
         print(cos_df)
         cos_df['index'] = pd.Series(mk)
         cos_df['Gender'] = pd.Series(gender)
@@ -643,7 +646,8 @@ def customZip_ner(candis_df, name, email, phone, mk, gender):
 
         cos_df[['FirstName', 'LastName']] = cos_df.Name.str.split(" ", n=1, expand=True)
 
-        cos_df = cos_df[['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Similarity', 'Status', 'Remark']]
+        cos_df = cos_df[['index', 'FirstName', 'LastName', 'Gender', 'Email id', 'Phone No', 'Similarity', 'Status',
+                         'Remark']]
 
         cos_df['index'] = cos_df['index'] + 1
         cos_df.drop_duplicates(keep="first", inplace=True)
@@ -664,4 +668,4 @@ def customZip_ner(candis_df, name, email, phone, mk, gender):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5010)
+    app.run()
