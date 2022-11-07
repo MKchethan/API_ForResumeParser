@@ -674,4 +674,4 @@ def customZip_ner(candis_df, name, email, phone, mk, gender):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
