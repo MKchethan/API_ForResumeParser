@@ -149,7 +149,7 @@ def get_file_info(file, filename):
     return ac_dict, re_dict
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 @cross_origin()
 def hello():
     return jsonify({'App Runnning successfully'})
