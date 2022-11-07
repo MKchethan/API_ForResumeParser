@@ -149,6 +149,12 @@ def get_file_info(file, filename):
     return ac_dict, re_dict
 
 
+@app.route('/', methods=['GET'])
+@cross_origin()
+def hello():
+    return jsonify({'App Runnning successfully'})
+
+
 @app.route('/parse_table', methods=['POST'])
 @cross_origin()
 def upload_file():
