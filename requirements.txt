@@ -1,9 +1,8 @@
 nltk==3.4.5
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.1.0/en_core_web_sm-2.1.0.tar.gz
 pyresparser==1.0.6
-scikit-learn==1.0.2
-scipy==1.7.3
+scikit-learn
 spacy==2.1.4
 flask
 flask_cors
-pandas
+pandas==1.1.4
