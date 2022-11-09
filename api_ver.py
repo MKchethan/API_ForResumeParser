@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import os
 from werkzeug.utils import secure_filename
+import streamlit as st
 import pandas as pd
 from pyresparser import ResumeParser
 from zipfile import ZipFile
@@ -153,7 +154,8 @@ def get_file_info(file, filename):
 @app.route('/', methods=['GET'])
 @cross_origin()
 def hello():
-    return jsonify({'print': 'App Runnning successfully'})
+#     return jsonify({'print': 'App Runnning successfully'})
+    st.text("App Running Successfully")
 
 @app.route('/parse_table', methods=['POST'])
 @cross_origin()
