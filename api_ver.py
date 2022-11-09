@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 import pandas as pd
 from pyresparser import ResumeParser
 from zipfile import ZipFile
+import sklearn
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
